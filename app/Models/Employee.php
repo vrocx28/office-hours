@@ -20,5 +20,6 @@ class Employee extends Authenticatable
         'department',
         'joining_date', 
         'status', 
+        'profile_pic',
     ];
 }

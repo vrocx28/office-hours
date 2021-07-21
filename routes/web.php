@@ -24,9 +24,10 @@ Route::group(['prefix'=>'/', 'middleware' => 'admin'], function(){
     Route::get('/logout','AdminController@logout')->name('logout');
     Route::get('/add-employee','AdminController@addEmployee')->name('add-employee');
     Route::post('/employee-post','AdminController@employeePost')->name('employee-post');
+    Route::post('/peremail-post','AdminController@verifyperemail')->name('peremail-post');
     Route::post('/email-post','AdminController@verifyemail')->name('email-post');
     Route::get('/get-city-list', 'AdminController@getCityList')->name('get-city-list');
-
+    Route::get('/view-employee', 'AdminController@viewEmployee')->name('view-employee');
 });
 
 // user routes

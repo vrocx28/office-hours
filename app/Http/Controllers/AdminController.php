@@ -74,11 +74,22 @@ class AdminController extends Controller
         return view('Admin/addemployee',['states'=>$states]);
     }
 
-    public function verifyemail(Request $request)
+    public function verifyperemail(Request $request)
     {
         $input = $request->all();
         $per_email = $this->employee::where('personal_email', $input['peremail'])->count();
         if ($per_email > 0) {
+            return $response = ['status' => '500',];
+        }else{
+            return $response = ['status' => '200',];
+        }
+    }
+
+    public function verifyemail(Request $request)
+    {
+        $input = $request->all();
+        $email = $this->employee::where('email', $input['email'])->count();
+        if ($email > 0) {
             return $response = ['status' => '500',];
         }else{
             return $response = ['status' => '200',];
@@ -118,7 +129,7 @@ class AdminController extends Controller
                 'joining_date' => $input['inputJDate'] ?? null,
                 'status' => $input['inputStatus'] ?? null,
             ];
-            if ($request->hasfile('inputProfilepic')) {
+            if($request->hasfile('inputProfilepic')) {
                 $file = $request->file('inputProfilepic');
                 $filename = ((string)(microtime(true) * 10000)) . "-" . $file->getClientOriginalName();
                 $file->move('images/', $filename);
@@ -148,13 +159,18 @@ class AdminController extends Controller
             {
                 $this->education::create($edu_data);
             }
-            dd($ed_save);
             DB::commit();
         } catch (Exception $e) {
             // Rollback Transaction
             DB::rollback();
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function viewEmployee()
+    {
+        $emp_data= $this->employee::get();
+        return view('Admin/viewemployees',['states'=>$emp_data]); 
     }
 
     public function logout()

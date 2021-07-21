@@ -13,11 +13,13 @@
     </div>
     <div class="col-12">
         <label for="inputPerEmail" class="form-label">Personal Email</label>
-        <input type="email" class="form-control chkeml" id="inputPerEmail" name="inputPerEmail" onkeyup="checkemail(this)">
+        <input type="email" class="form-control" name="inputPerEmail" onkeyup="checkperemail(this)">
+        <label id="error-msg" class="chkeml" style="color:red"></label>
     </div>
     <div class="col-12">
         <label for="inputComEmail" class="form-label">Company Email</label>
-        <input type="email" class="form-control" id="inputComEmail" name="inputComEmail">
+        <input type="email" class="form-control" name="inputComEmail" onkeyup="checkemail(this)">
+        <label id="error-msg" class="eml" style="color:red"></label>
     </div>
     <div class="col-md-6">
         <label for="inputPassword" class="form-label">Password</label>
@@ -36,9 +38,9 @@
         </select>
     </div>
     <!-- <div class="col-md-6">
-            <label for="inputConfPassword" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="inputConfPassword" name="inputConfPassword">
-        </div> -->
+                <label for="inputConfPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="inputConfPassword" name="inputConfPassword">
+            </div> -->
     <div class="col-md-6">
         <label for="inputDesignation" class="form-label">Designation</label>
         <input type="text" class="form-control" id="inputDesignation" name="inputDesignation">
@@ -66,11 +68,11 @@
         <input type="date" class="form-control" id="inputJDate" name="inputJDate">
     </div>
     <h5>Education Details</h5>
-    <div class = "after-add-more">
+    <div class="after-add-more">
         <div class="row first_element">
             <div class="col-md-4">
                 <label for="inputDegreetype" class="form-label">Degree Type</label>
-                <select id="inputDegreetype" name="inputDegreetype[]" class="form-select" onchange="displayCourse(0)">
+                <select id="inputDegreetype" name="inputDegreetype[]" class="form-select unique-value" onchange="displayCourse(0)">
                     <option selected value="">Choose...</option>
                     <option value="Graduation">Graduation</option>
                     <option value="Masters">Masters</option>
@@ -86,7 +88,11 @@
             </div>
             <div class="col-md-4">
                 <label for="inputPassYear" class="form-label">Passing year</label>
-                <select id="inputPassYear" name="inputPassYear[]" class="form-select passyear" onload="genyear()">
+                <select name="inputPassYear[]" class="form-select passyear">
+                    <option value="">Select...</option>
+                    {{ $year = date('Y') }}
+                    @for ($i = 1990; $i <= $year; $i++) <option value="{{$i}}">{{$i}}</option>
+                        @endfor
                 </select>
             </div>
             <div class="col-md-5">
@@ -95,14 +101,14 @@
             </div>
             <div class="col-md-3">
                 <label for="inputState" class="form-label">State</label>
-                    <select id="inputState" name="inputState[]" class="form-select" data-live-search="true" onchange="getCityLIstFromStateId(this)">
-                        <option value="">Select</option>
-                        @if(!empty($states) && count($states) > 0)
-                        @foreach($states as $state)
-                        <option value="{{$state->id}}">{{$state->state}}</option>
-                        @endforeach
-                        @endif
-                    </select>
+                <select id="inputState" name="inputState[]" class="form-select" data-live-search="true" onchange="getCityLIstFromStateId(this)">
+                    <option value="">Select</option>
+                    @if(!empty($states) && count($states) > 0)
+                    @foreach($states as $state)
+                    <option value="{{$state->id}}">{{$state->state}}</option>
+                    @endforeach
+                    @endif
+                </select>
             </div>
             <div class="col-md-3">
                 <label for="inputCity" class="form-label">City</label>
@@ -121,6 +127,7 @@
     </div>
 </form>
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script>
@@ -144,14 +151,14 @@
                 inputJDate: 'required',
                 inputDepartment: 'required',
                 inputStatus: 'required',
-                inputDegreetype: 'required',
-                course: 'required',
-                inputMasters: 'required',
-                inputPassYear: 'required',
-                // inputEmail: {
-                //     required: true,
-                //     email: true,
-                // },
+                inputPerEmail: {
+                    required: true,
+                    email: true,
+                },
+                inputComEmail: {
+                    required: true,
+                    email: true,
+                },
                 inputPassword: {
                     required: true,
                     minlength: 8,
@@ -165,11 +172,8 @@
                 inputJDate: 'This field is required',
                 inputDepartment: 'This field is required',
                 inputStatus: 'This field is required',
-                inputDegreetype: 'This field is required',
-                course: 'This field is required',
-                inputMasters: 'This field is required',
-                inputPassYear: 'This field is required',
-                // inputEmail: 'Enter a valid email',
+                inputPerEmail: 'Enter a valid email',
+                inputComEmail: 'Enter a valid email',
                 inputPassword: {
                     minlength: 'Password must be at least 8 characters long'
                 }
@@ -181,11 +185,12 @@
     });
 
 
-   function addMore(obj) {
-       $(obj).html('-');
-       $(obj).attr("onclick", "remove(this)")
-       var length = $('.after-add-more').length;
-       $('.after-add-more').append('<div class="row first_element"><div class="col-md-4"><label for="inputDegreetype" class="form-label">Degree Type</label><select id="inputDegreetype'+length+'" name="inputDegreetype[]" class="form-select" onchange="displayCourse('+length+')"><option selected value="">Choose...</option><option value="Graduation">Graduation</option><option value="Masters">Masters</option></select></div><div class="col-md-4"><label for="inputDegreeName" class="form-label">Select Degree</label><select id="course'+length+'" name="inputDegree[]" class="form-select" style="display:none"><option selected value="">Choose...</option><option value="Graduation">B.tech</option><option value="Masters">BCA</option></select></div><div class="col-md-4"><label for="inputPassYear" class="form-label">Passing year</label><select id="inputPassYear" name="inputPassYear[]" class="form-select"></select></div><div class="col-md-5"><label for="inputCollege" class="form-label">College Name</label><input type="text" class="form-control" id="inputCollege" name="inputCollege[]"></div><div class="col-md-3"> <label for="inputState" class="form-label">State</label><select id="inputState'+length+'" name="inputState[]" class="form-select" data-live-search="true" onchange="getCityLIstFromStateId(this)"><option value="">Select</option>@if(!empty($states) && count($states) > 0)@foreach($states as $state)<option value="{{$state->id}}">{{$state->state}}</option> @endforeach @endif </select></div><div class="col-md-3"><label for="inputCity" class="form-label">City</label><select name="inputCity[]" class="form-select city" data-live-search="true"><option value="">Select</option></select></div><div class="col-md-1"><label for="addMore" class="form-label"></label><button type="button" class="btn btn-primary add-mr" onclick="remove(this);">-</button></div></div>');
+    function addMore(obj) {
+        $(obj).html('-');
+        $(obj).attr("onclick", "remove(this)")
+        var length = $('.after-add-more').length;
+        $('.after-add-more').append('<div class="row first_element"><div class="col-md-4"><label for="inputDegreetype" class="form-label">Degree Type</label><select id="inputDegreetype' + length + '" name="inputDegreetype[]" class="form-select unique-value" onchange="displayCourse(' + length + ')"><option selected value="">Choose...</option><option value="Graduation">Graduation</option><option value="Masters">Masters</option></select></div><div class="col-md-4"><label for="inputDegreeName" class="form-label">Select Degree</label><select id="course' + length + '" name="inputDegree[]" class="form-select" style="display:none"><option selected value="">Choose...</option><option value="Graduation">B.tech</option><option value="Masters">BCA</option></select></div><div class="col-md-4"><label for="inputPassYear" class="form-label">Passing year</label><select name="inputPassYear[]" class="form-select passyear"><option>Select...</option>{{ $year = date("Y")}}@for ($i = 1990; $i <= $year; $i++)<option value="{{$i}}">{{$i}}</option>@endfor</select></div><div class="col-md-5"><label for="inputCollege" class="form-label">College Name</label><input type="text" class="form-control" id="inputCollege" name="inputCollege[]"></div><div class="col-md-3"> <label for="inputState" class="form-label">State</label><select id="inputState' + length + '" name="inputState[]" class="form-select" data-live-search="true" onchange="getCityLIstFromStateId(this)"><option value="">Select</option>@if(!empty($states) && count($states) > 0)@foreach($states as $state)<option value="{{$state->id}}">{{$state->state}}</option> @endforeach @endif </select></div><div class="col-md-3"><label for="inputCity" class="form-label">City</label><select name="inputCity[]" class="form-select city" data-live-search="true"><option value="">Select</option></select></div><div class="col-md-1"><label for="addMore" class="form-label"></label><button type="button" class="btn btn-primary add-mr" onclick="remove(this);">-</button></div></div>');
+        $(".unique-value").trigger('change');
     }
 
     function remove(obj) {
@@ -195,24 +200,28 @@
     }
 
     function displayCourse(length) {
-            if(length==0){
-                length='';
-            }
-                if ($("#inputDegreetype"+length).val() == "Graduation") {
-                    $("#course"+length).show();
-                $("#course"+length).html(' <option selected value="">Choose...</option><option value="b_tech">B.tech</option><option value="bca">BCA</option>');
-            } else if ($("#inputDegreetype"+length).val() == "Masters") {
-                    $("#course"+length).show();
-                $("#course"+length).html(' <option selected value="">Choose...</option><option value="m_tech">M.tech</option><option value="mca">MCA</option>');
-            } else {
-                    $("#course"+length).hide();
-                $("#course"+length).html('');
-            }           
+        if (length == 0) {
+            length = '';
+        }
+        if ($("#inputDegreetype" + length).val() == "Graduation") {
+            $("#course" + length).show();
+            $("#course" + length).html(' <option selected value="">Choose...</option><option value="b_tech">B.tech</option><option value="bca">BCA</option>');
+        } else if ($("#inputDegreetype" + length).val() == "Masters") {
+            $("#course" + length).show();
+            $("#course" + length).html(' <option selected value="">Choose...</option><option value="m_tech">M.tech</option><option value="mca">MCA</option>');
+        } else {
+            $("#course" + length).hide();
+            $("#course" + length).html('');
+        }
+
+        
     }
-    
-    function getCityLIstFromStateId(obj){
+
+    function getCityLIstFromStateId(obj) {
         var state_id = $(obj).val();
-        var data = {state_id : state_id};
+        var data = {
+            state_id: state_id
+        };
         $.ajax({
             type: "GET",
             url: "{{action('AdminController@getCityList')}}",
@@ -221,40 +230,74 @@
             success: function(response) {
                 $(obj).parent().next().find('.city').html(response.cities_list);
             }
-       });
-   }
-
-   function checkemail(obj){
-            var peremail = $(obj).val();
-            var token='{{csrf_token()}}';
-            $.ajax({
-            url: '{{route("email-post")}}',
-            method: "POST",
-            dataType: "json",
-            data:{peremail:peremail, '_token':token},
-            cache: false, 
-            success: function(response) {
-              if(response.status == '500'){
-                $(obj).parent().next().find('.chkeml').html('<label id="error-msg" style="color:red">Already Exist</label>');
-               }else{
-               }
-            }
         });
     }
-    
-    function genyear() {
-            //Reference the DropDownList.
-            var inputPassYear = document.getElementById("inputPassYear");
 
-            //Determine the Current Year.
-            var currentYear = (new Date()).getFullYear();
+    function checkperemail(obj) {
+        var peremail = $(obj).val();
+        var token = '{{csrf_token()}}';
+        var data =
+            $.ajax({
+                url: '{{route("peremail-post")}}',
+                method: "POST",
+                dataType: "json",
+                data: {
+                    peremail: peremail,
+                    '_token': token
+                },
+                cache: false,
+                success: function(response) {
+                    if (response.status == '500') {
+                        $('.chkeml').html('Already Exist');
+                        $(':input[type="submit"]').prop('disabled', true);
+                    } else {
+                        $('.chkeml').html('');
+                        $(':input[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+    }
 
-            //Loop and add the Year values to DropDownList.
-            for (var i = 1990; i <= currentYear; i++) {
-                var option = document.createElement("OPTION");
-                option.innerHTML = i;
-                option.value = i;
-                inputPassYear.appendChild(option);
-            }
-        }
+    function checkemail(obj) {
+        var email = $(obj).val();
+        var token = '{{csrf_token()}}';
+        var data =
+            $.ajax({
+                url: '{{route("email-post")}}',
+                method: "POST",
+                dataType: "json",
+                data: {
+                    email: email,
+                    '_token': token
+                },
+                cache: false,
+                success: function(response) {
+                    if (response.status == '500') {
+                        $('.eml').html('Not Available');
+                        $(':input[type="submit"]').prop('disabled', true);
+                    } else {
+                        $('.eml').html('');
+                        $(':input[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+    }
+    $(document).ready(function() {
+        $(".unique-value").change(function() {
+            // Get the selected value
+            var selected = $("option:selected", $(this)).val();
+            // Get the ID of this element
+            var thisID = $(this).prop("id");
+            // Reset so all values are showing:
+            $(".unique-value option").each(function() {
+                $(this).prop("disabled", false);
+            });
+            $(".unique-value").each(function() {
+                if ($(this).prop("id") != thisID) {
+                    $("option[value='" + selected + "']", $(this)).prop("disabled", true);
+                }
+            });
+
+        });
+    });
 </script>

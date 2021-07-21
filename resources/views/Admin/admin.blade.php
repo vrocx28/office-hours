@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
+            <img src="images/project_images/Add_Emp.jpg" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">Add Employee</h5>
                 <a href="{{route('add-employee')}}" class="stretched-link"></a>
@@ -12,10 +12,10 @@
         </div>
 
         <div class="card view-emp" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
+            <img src="images/project_images/View_Emp.jpg" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">View Employees</h5>
-                <a href="{{route('add-employee')}}" class="stretched-link"></a>
+                <a href="{{route('view-employee')}}" class="stretched-link"></a>
             </div>
         </div>
     </div>
