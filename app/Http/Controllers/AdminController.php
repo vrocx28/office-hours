@@ -41,8 +41,7 @@ class AdminController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (!Auth::guard('admin')->attempt($credentials)) {
-            return redirect("adminlogin")
-                ->withSuccess('Oppes! You have entered invalid credentials');
+            return redirect("adminlogin")->withErrors('Invalid Username or Password');
         } else {
             return redirect('admin');
         }
@@ -63,8 +62,7 @@ class AdminController extends Controller
         if (Auth::guard('admin')->user()) {
             return view('Admin/admin');
         } else {
-            return redirect("adminlogin")
-                ->withSuccess('Opps! You do not have access');
+            return redirect("adminlogin")->withErrors('Opps! You do not have access');
         }
     }
 
@@ -159,7 +157,8 @@ class AdminController extends Controller
             {
                 $this->education::create($edu_data);
             }
-            DB::commit();
+                DB::commit();
+                return redirect()->back();
         } catch (Exception $e) {
             // Rollback Transaction
             DB::rollback();
@@ -167,10 +166,15 @@ class AdminController extends Controller
         }
     }
 
-    public function viewEmployee()
+    public function viewEmployees()
     {
         $emp_data= $this->employee::get();
-        return view('Admin/viewemployees',['states'=>$emp_data]); 
+        return view('Admin/viewemployees',['emp_data'=>$emp_data]); 
+    }
+
+    public function viewEmployeeDelatils($id)
+    {
+
     }
 
     public function logout()

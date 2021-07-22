@@ -59,4 +59,16 @@
         margin-top: 30px;
         padding: 5px 11px 7px 11px;
     }
-    
+    .emp-badge{
+        width: 18rem;
+        padding-top: .5rem;
+        padding-left: .5rem;
+        padding-right: .5rem;
+        background-color:rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        margin: auto;
+    }
+    .badge-body{
+        font-family: Raleway, sans-serif;
+        text-align: center;
+    }
