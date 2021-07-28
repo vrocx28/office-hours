@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 @extends('userlayout')
-
+@include('footer')
 @section('content')
 <main class="login-form">
     <div class="cotainer">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">Login</div>
                     <div class="card-body">

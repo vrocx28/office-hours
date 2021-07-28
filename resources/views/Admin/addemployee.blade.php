@@ -1,4 +1,6 @@
+<!DOCTYPE html>
 @extends('adminlayout')
+@include('footer')
 @section('content')
 <form class="row g-3 form-container" action="{{ route('employee-post') }}" id="AddEmp" autocomplete="off" enctype="multipart/form-data" method="post">
     <h2>Add Employee</h2>
@@ -128,8 +130,6 @@
 </form>
 @endsection
 
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script>
     function randompass() {
         var length = 8,

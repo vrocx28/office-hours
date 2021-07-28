@@ -39,3 +39,15 @@
      
 </body>
 </html>
+
+<!-- <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+ $(window).on('beforeunload', function(){
+var c=confirm("Sure you want to logout?");
+if(c){
+  return true;
+}
+else
+return false;
+});
+</script> -->

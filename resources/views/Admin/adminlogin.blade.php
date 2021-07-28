@@ -1,5 +1,5 @@
 @extends('adminlayout')
-
+@include('footer')
 @section('content')
 <main class="login-form">
     <div class="cotainer">

@@ -37,7 +37,14 @@ Route::get('/login','UserController@userLogin')->name('login');
 Route::post('/user-post','UserController@userLoginPost')->name('user-post');
 Route::group(['prefix'=>'/', 'middleware' => 'emp'], function(){
     Route::get('/dashboard','UserController@userDashboard')->name('dashboard');
+    Route::get('/change-break-button','UserController@changeBreakButton')->name('change-break-button');
+    Route::get('/take-a-break','UserController@takeabreak')->name('take-a-break');
+    Route::get('/end-break','UserController@endbreak')->name('end-break');
+    Route::get('/change-lunch-button','UserController@changeLunchButton')->name('change-lunch-button');
+    Route::get('/start-lunch','UserController@startlunch')->name('start-lunch');
+    Route::get('/end-lunch','UserController@endlunch')->name('end-lunch');
     Route::get('/emplogout','UserController@empLogout')->name('emplogout');
+
 });
 
 Route::get('/populate-state-city-data','StateCityController@savestatecity')->name('populate-state-city-data');

@@ -1,5 +1,6 @@
+<!DOCTYPE html>
 @extends('adminlayout')
-  
+@include('footer')
 @section('content')
 <div class="container mt-5">
     <div class="row">
@@ -24,8 +25,7 @@
     </div>
 </div>    
 
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 window.onunload = function() {
         logout();
     
@@ -34,6 +34,6 @@ window.onunload = function() {
     {
         window.location.href = "{{route('logout')}}";
     }
-</script>
+</script> -->
 
 @endsection

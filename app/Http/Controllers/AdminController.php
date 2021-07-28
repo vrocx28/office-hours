@@ -10,6 +10,9 @@ use \App\Models\Employee;
 use \App\Models\States;
 use \App\Models\Cities;
 use \App\Models\Education;
+use \App\Models\Timesheet;
+use \App\Models\Breaktime;
+use \App\Models\Lunch;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Hash;
@@ -22,14 +25,20 @@ class AdminController extends Controller
     protected $state;
     protected $citie;
     protected $education;
+    protected $timesheet;
+    protected $breaktime;
+    protected $lunch;
 
-    public function __construct(admins $admins, Employee $employee, States $state, Cities $citie, Education $education) 
+    public function __construct(admins $admins, Employee $employee, States $state, Cities $citie, Education $education, Timesheet $timesheet, Breaktime $breaktime, Lunch $lunch) 
     {
         $this->admins = $admins;
         $this->employee = $employee;
         $this->state = $state;
         $this->citie = $citie;
         $this->education = $education;
+        $this->timesheet = $timesheet;
+        $this->breaktime = $breaktime;
+        $this->lunch = $lunch;
     }
 
     public function adminLoginPost(Request $request)
@@ -158,7 +167,7 @@ class AdminController extends Controller
                 $this->education::create($edu_data);
             }
                 DB::commit();
-                return redirect()->back();
+                return redirect()->back()->with("Employees Added Successfully");
         } catch (Exception $e) {
             // Rollback Transaction
             DB::rollback();
@@ -174,7 +183,10 @@ class AdminController extends Controller
 
     public function viewEmployeeDelatils($id)
     {
-
+        $breaks = $this->breaktime->where('emp_id',$id)->get();
+        $lunch = $this->lunch->where('emp_id',$id)->get();
+        $signin = $this->timesheet->where('id',$id)->get();
+        return view('Admin/empdetails',['lunch'=>$lunch],['breaks'=>$breaks],['signin'=>$signin]);
     }
 
     public function logout()
