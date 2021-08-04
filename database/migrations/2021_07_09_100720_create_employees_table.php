@@ -26,6 +26,16 @@ class CreateEmployeesTable extends Migration
             $table->date('joining_date')->nullable();
             $table->enum('status', ['0', '1'])->comment('0 fo Inactive and 1 for Active')->nullable();
             $table->longText('profile_pic')->nullable();
+            $table->string('grad_college_name')->nullable();
+            $table->string('grad_degree')->nullable();
+            $table->year('grad_passing_year')->nullable();
+            $table->string('grad_state')->nullable();
+            $table->string('grad_city')->nullable();
+            $table->string('mas_college_name')->nullable();
+            $table->string('mas_degree')->nullable();
+            $table->year('mas_passing_year')->nullable();
+            $table->string('mas_state')->nullable();
+            $table->string('mas_city')->nullable();
             $table->timestamps();
         });
     }

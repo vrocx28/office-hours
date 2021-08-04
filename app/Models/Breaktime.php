@@ -16,4 +16,8 @@ class Breaktime extends Model
         'break_end',
         'end_hour',
     ];
+    public function empbreak()
+    {
+        return $this->belongsTo(Employee::class,'emp_id','id');
+    }
 }

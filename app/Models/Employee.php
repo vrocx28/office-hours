@@ -21,5 +21,27 @@ class Employee extends Authenticatable
         'joining_date', 
         'status', 
         'profile_pic',
+        'grad_college_name',
+        'grad_degree',
+        'grad_passing_year',
+        'grad_state',
+        'grad_city', 
+        'mas_college_name',
+        'mas_degree',
+        'mas_passing_year',
+        'mas_state',
+        'mas_city',
     ];
+    public function loginemp()
+    {
+        return $this->hasMany(Timesheet::class, 'emp_id', 'id');
+    }
+    public function lunchemp()
+    {
+        return $this->hasMany(Lunch::class, 'emp_id', 'id');
+    }
+    public function breakemp()
+    {
+        return $this->hasMany(Breaktime::class, 'emp_id', 'id');
+    }
 }

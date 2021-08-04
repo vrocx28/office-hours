@@ -9,7 +9,6 @@ use \App\Models\admins;
 use \App\Models\Employee;
 use \App\Models\States;
 use \App\Models\Cities;
-use \App\Models\Education;
 use \App\Models\Timesheet;
 use \App\Models\Breaktime;
 use \App\Models\Lunch;
@@ -24,18 +23,16 @@ class AdminController extends Controller
     protected $employee;
     protected $state;
     protected $citie;
-    protected $education;
     protected $timesheet;
     protected $breaktime;
     protected $lunch;
 
-    public function __construct(admins $admins, Employee $employee, States $state, Cities $citie, Education $education, Timesheet $timesheet, Breaktime $breaktime, Lunch $lunch) 
+    public function __construct(admins $admins, Employee $employee, States $state, Cities $citie, Timesheet $timesheet, Breaktime $breaktime, Lunch $lunch) 
     {
         $this->admins = $admins;
         $this->employee = $employee;
         $this->state = $state;
         $this->citie = $citie;
-        $this->education = $education;
         $this->timesheet = $timesheet;
         $this->breaktime = $breaktime;
         $this->lunch = $lunch;
@@ -67,12 +64,8 @@ class AdminController extends Controller
 
     public function adminDashboard()
     {
-
-        if (Auth::guard('admin')->user()) {
-            return view('Admin/admin');
-        } else {
-            return redirect("adminlogin")->withErrors('Opps! You do not have access');
-        }
+        $emp_data= $this->employee::get();
+        return view('Admin/admin',['emp_data'=>$emp_data]); 
     }
 
     public function addEmployee()
@@ -125,17 +118,33 @@ class AdminController extends Controller
         try 
         {
             $data = [
-                'first_name' => $input['inputFname'] ?? null,
-                'last_name' => $input['inputLname'] ?? null,
-                'personal_email' => $input['inputPerEmail'] ?? null,
-                'email' => $input['inputComEmail'] ?? null,
-                'password' => bcrypt($input['inputPassword']) ?? "",
-                'designation' => $input['inputDesignation'] ?? null,
-                'employee_id' => $input['inputEmployeeID'] ?? null,
-                'department' => $input['inputDepartment'] ?? null,
-                'joining_date' => $input['inputJDate'] ?? null,
-                'status' => $input['inputStatus'] ?? null,
+                'first_name'        => $input['inputFname'] ?? null,
+                'last_name'         => $input['inputLname'] ?? null,
+                'personal_email'    => $input['inputPerEmail'] ?? null,
+                'email'             => $input['inputComEmail'] ?? null,
+                'designation'       => $input['inputDesignation'] ?? null,
+                'employee_id'       => $input['inputEmployeeID'] ?? null,
+                'department'        => $input['inputDepartment'] ?? null,
+                'joining_date'      => $input['inputJDate'] ?? null,
+                'status'            => $input['inputStatus'] ?? null,
+
+                'grad_college_name' => $input['inputGradCollege'] ?? null,
+                'grad_degree'       => $input['inputGradDegree'] ?? null,
+                'grad_passing_year' => $input['inputGradPassYear'] ?? null,
+                'grad_state'        => $input['inputGradState'] ?? null,
+                'grad_city'         => $input['inputGradCity'] ?? null,
+
+                'mas_college_name'  => $input['inputMasCollege'] ?? null,
+                'mas_degree'        => $input['inputMasDegree'] ?? null,
+                'mas_passing_year'  => $input['inputMasPassYear'] ?? null,
+                'mas_state'         => $input['inputMasState'] ?? null,
+                'mas_city'          => $input['inputMasCity'] ?? null,
             ];
+
+            if(isset($input['record_id']) && !empty($input['record_id'])){
+            }else{
+                $data['password'] = bcrypt($input['inputPassword'])??null;
+            }
             if($request->hasfile('inputProfilepic')) {
                 $file = $request->file('inputProfilepic');
                 $filename = ((string)(microtime(true) * 10000)) . "-" . $file->getClientOriginalName();
@@ -143,31 +152,13 @@ class AdminController extends Controller
                 $secondary_file = 'images/' . $filename;
                 $data['profile_pic'] = $secondary_file;
             }
-            $save =  $this->employee::create($data);
-            $emp_id = $save->id;
-
-            $count = 0;
-            $all_emp_data = [];
-            foreach($input['inputDegreetype'] as $degreetype)
-            {
-                $ed_data = [];
-                $ed_data['emp_id'] = $emp_id;
-                $ed_data['degree_type'] = $degreetype;
-                $ed_data['degreename'] = $input['inputDegree'][$count] ?? null;
-                $ed_data['passing_year'] = $input['inputPassYear'][$count] ?? null;
-                $ed_data['college_name'] = $input['inputCollege'][$count] ?? null;
-                $ed_data['state'] = $input['inputState'][$count] ?? null;
-                $ed_data['city'] = $input['inputCity'][$count] ?? null;
-
-                array_push($all_emp_data, $ed_data);
-                $count++;
+            if(isset($input['record_id']) && !empty($input['record_id'])){
+                $update = $this->employee::where('id', $input['record_id'])->update($data);
+            }else{
+                $save =  $this->employee::create($data);
             }
-            foreach($all_emp_data as $edu_data)
-            {
-                $this->education::create($edu_data);
-            }
-                DB::commit();
-                return redirect()->back()->with("Employees Added Successfully");
+            DB::commit();
+            return redirect()->back()->with("Employees Added Successfully");
         } catch (Exception $e) {
             // Rollback Transaction
             DB::rollback();
@@ -175,18 +166,15 @@ class AdminController extends Controller
         }
     }
 
-    public function viewEmployees()
+    public function viewEmployee($id)
     {
-        $emp_data= $this->employee::get();
-        return view('Admin/viewemployees',['emp_data'=>$emp_data]); 
-    }
-
-    public function viewEmployeeDelatils($id)
-    {
+        $emp_details = $this->employee->where('id',$id)->first();
         $breaks = $this->breaktime->where('emp_id',$id)->get();
         $lunch = $this->lunch->where('emp_id',$id)->get();
-        $signin = $this->timesheet->where('id',$id)->get();
-        return view('Admin/empdetails',['lunch'=>$lunch],['breaks'=>$breaks],['signin'=>$signin]);
+        $signin = $this->timesheet->where('emp_id',$id)->get();
+        $states= $this->state::get();
+        // dd($cities);
+        return view('Admin/viewemployee',['lunch'=>$lunch,'breaks'=>$breaks,'signin'=>$signin, 'emp_details'=>$emp_details,'states'=>$states]);
     }
 
     public function logout()

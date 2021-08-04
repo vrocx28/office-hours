@@ -16,4 +16,8 @@ class Lunch extends Model
         'lunch_end',
         'end_hour',
     ];
+    public function emplunch()
+    {
+        return $this->belongsTo(Employee::class,'emp_id','id');
+    }
 }

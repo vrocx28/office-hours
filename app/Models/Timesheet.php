@@ -16,4 +16,12 @@ class Timesheet extends Model
         'logout_time',
         'logout_hour',
     ];
+    public function emplogin()
+    {
+        return $this->belongsTo(Employee::class,'emp_id','id');
+    }
+
+    // public function Lunch(){
+    //     return $this->belongsTo(Lunch::class,'emp_id','emp_id');
+    // }
 }

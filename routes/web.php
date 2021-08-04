@@ -21,14 +21,13 @@ Route::get('/adminlogin','AdminController@adminLogin')->name('adminlogin');
 Route::post('/admin-post','AdminController@adminLoginPost')->name('admin-post');
 Route::group(['prefix'=>'/', 'middleware' => 'admin'], function(){
     Route::get('/admin','AdminController@adminDashboard')->name('admin');
-    Route::get('/logout','AdminController@logout')->name('logout');
     Route::get('/add-employee','AdminController@addEmployee')->name('add-employee');
     Route::post('/employee-post','AdminController@employeePost')->name('employee-post');
     Route::post('/peremail-post','AdminController@verifyperemail')->name('peremail-post');
     Route::post('/email-post','AdminController@verifyemail')->name('email-post');
     Route::get('/get-city-list', 'AdminController@getCityList')->name('get-city-list');
-    Route::get('/view-employees', 'AdminController@viewEmployees')->name('view-employees');
-    Route::get('/view-employee-delatils/{id?}','AdminController@viewEmployeeDelatils')->name('view-employee-delatils');
+    Route::get('/view-employee/{id?}','AdminController@viewEmployee')->name('view-employee');
+    Route::get('/logout','AdminController@logout')->name('logout');
 
 });
 
