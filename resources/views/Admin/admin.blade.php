@@ -2,30 +2,38 @@
 @extends('adminlayout')
 @include('footer')
 @section('content')
-<div class="outer-sec">
-    <a href="{{('add-employee')}}" class="btn btn-primary">Add new Employee</a>
-    <div class="container mt-5">
-        <div class="row">
-            @foreach ($emp_data as $employee)
-                <div class="col-lg-3 col-md-3">
-                    <div class="card">
-                        @if(!empty($employee->profile_pic))
-                            <img src="{{url('')}}/{{$employee->profile_pic}}" class="card-img-top" alt="...">
-                        @else
-                            <img src="images/project_images/stock.jpg" class="card-img-top" alt="...">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{$employee->first_name}} &nbsp; {{$employee->last_name}}</h5>
-                            <a href="{{route('view-employee')}}/{{$employee->id}}" class="stretched-link"></a>
-                        </div>
-                    </div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <div class="card emp-badge">
+                <img src="images/project_images/Add_Emp.jpg" class="card-img-top" alt="..." width="100%">
+                <div class="card-body badge-body">
+                    <h5 class="card-title">Add Employee</h5>
+                    <a href="{{route('add-employee')}}" class="stretched-link"></a>
                 </div>
-            @endforeach
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="card emp-badge">
+                <img src="images/project_images/View_Emp.jpg" class="card-img-top" alt="..." width="100%">
+                <div class="card-body badge-body">
+                    <h5 class="card-title">View Employees</h5>
+                    <a href="{{route('all-employees')}}" class="stretched-link"></a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</div>    
+
+<!-- <script type="text/javascript">
+window.onunload = function() {
+        logout();
+    
+}
+    function logout()
+    {
+        window.location.href = "{{route('logout')}}";
+    }
+</script> -->
+
 @endsection
-<!-- <label class="switch">
-  <input type="checkbox" checked>
-  <span class="slider round"></span>
-</label> -->

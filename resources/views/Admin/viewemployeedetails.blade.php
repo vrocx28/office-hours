@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="container mt-5">
-   <a href="{{route('admin')}}" class="btn btn-primary">&#8592; Back</a>
+   <a href="{{route('all-employees')}}" class="btn btn-primary">&#8592; Back</a>
    <button type="button" class="btn btn-primary" id="editbutton" onclick="editprofile();">Edit Details</button>
 </div>
 
@@ -78,7 +78,7 @@
       </div>
       <div class="col-md-4">
          <label for="inputGradCollege" class="form-label">College Name</label>
-         <input type="text" class="form-control" id="inputGradCollege" name="inputGCollege" value="{{$emp_details->grad_college_name??''}}">
+         <input type="text" class="form-control" name="inputGradCollege" value="{{$emp_details->grad_college_name??''}}">
       </div>
       <div class="col-md-2">
          <label for="inputGDegreeName" class="form-label">Select Degree</label>
@@ -112,6 +112,9 @@
          <label for="inputGradCity" class="form-label">City</label>
          <select id="inputGradCity" name="inputGradCity" class="form-select city" data-live-search="true">
             <option value="">Select</option>
+            @foreach($gradcity as $gcity)
+               <option value="{{$gcity->id}}" {{($emp_details->grad_city == $gcity->id) ? 'selected' : ''}}>{{$gcity->city}}</option>
+            @endforeach
          </select>
       </div>
       <div class="col-md-1" id="addmore" @if(!empty($emp_details->mas_college_name) && ($emp_details->mas_college_name != null)) style="display:none" @else  @endif>
@@ -125,7 +128,7 @@
          </div>
          <div class="col-md-4">
             <label for="inputMasCollege" class="form-label">College Name</label>
-            <input type="text" class="form-control" id="inputMasCollege" name="inputMCollege" value="{{$emp_details->mas_college_name??''}}">
+            <input type="text" class="form-control" name="inputMasCollege" value="{{$emp_details->mas_college_name??''}}">
          </div>
          <div class="col-md-2">
             <label for="inputMasDegreeName" class="form-label">Select Degree</label>
@@ -159,6 +162,9 @@
             <label for="inputMasCity" class="form-label">City</label>
             <select name="inputMasCity" class="form-select city" data-live-search="true">
                <option value="">Select</option>
+               @foreach($mascity as $mcity)
+                  <option value="{{$mcity->id}}" {{($emp_details->mas_city == $mcity->id) ? 'selected' : ''}}>{{$mcity->city}}</option>
+               @endforeach
             </select>
          </div>
          <div class="col-md-1 ">

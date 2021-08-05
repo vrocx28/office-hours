@@ -64,8 +64,7 @@ class AdminController extends Controller
 
     public function adminDashboard()
     {
-        $emp_data= $this->employee::get();
-        return view('Admin/admin',['emp_data'=>$emp_data]); 
+        return view('Admin/admin');
     }
 
     public function addEmployee()
@@ -165,16 +164,25 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+    public function viewAllEmployees()
+    {
+        $emp_data= $this->employee::get();
+        return view('Admin/allemployees',['emp_data'=>$emp_data]); 
+    }
 
-    public function viewEmployee($id)
+    public function viewEmployeeDetails($id)
     {
         $emp_details = $this->employee->where('id',$id)->first();
         $breaks = $this->breaktime->where('emp_id',$id)->get();
         $lunch = $this->lunch->where('emp_id',$id)->get();
         $signin = $this->timesheet->where('emp_id',$id)->get();
-        $states= $this->state::get();
-        // dd($cities);
-        return view('Admin/viewemployee',['lunch'=>$lunch,'breaks'=>$breaks,'signin'=>$signin, 'emp_details'=>$emp_details,'states'=>$states]);
+        $states = $this->state::get();
+        $gcity = $emp_details->grad_state;
+        $mcity = $emp_details->mas_state;
+        $gradcity = $this->citie->where('state_id',$gcity)->get();
+        $mascity = $this->citie->where('state_id',$mcity)->get();
+        // dd($gradcity);
+        return view('Admin/viewemployeedetails',['lunch'=>$lunch,'breaks'=>$breaks,'signin'=>$signin, 'emp_details'=>$emp_details,'states'=>$states, 'gradcity'=>$gradcity, 'mascity'=>$mascity]);
     }
 
     public function logout()

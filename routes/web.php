@@ -26,7 +26,8 @@ Route::group(['prefix'=>'/', 'middleware' => 'admin'], function(){
     Route::post('/peremail-post','AdminController@verifyperemail')->name('peremail-post');
     Route::post('/email-post','AdminController@verifyemail')->name('email-post');
     Route::get('/get-city-list', 'AdminController@getCityList')->name('get-city-list');
-    Route::get('/view-employee/{id?}','AdminController@viewEmployee')->name('view-employee');
+    Route::get('/all-employees','AdminController@viewAllEmployees')->name('all-employees');
+    Route::get('/view-employee-details/{id?}','AdminController@viewEmployeeDetails')->name('view-employee-details');
     Route::get('/logout','AdminController@logout')->name('logout');
 
 });
