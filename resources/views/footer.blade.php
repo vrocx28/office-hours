@@ -16,7 +16,7 @@
         }
         document.getElementById("inputPassword").value = retVal;
     }
-    // function to validate form
+    // function to validate form on admin side
     $(document).ready(function() {
         $('#AddEmp').validate({
             rules: {
@@ -32,6 +32,11 @@
                 inputGradPassYear: 'required',
                 inputGradState: 'required',
                 inputGradCity: 'required',
+                inputPhone:{
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10,
+                },
                 inputPerEmail: {
                     required: true,
                     email: true,
@@ -43,7 +48,7 @@
                 inputPassword: {
                     required: true,
                     minlength: 8,
-                }
+                },
             },
             messages: {
                 inputFname: 'This field is required',
@@ -60,6 +65,10 @@
                 inputGradPassYear: 'Select Year',
                 inputGradState: 'This field is required',
                 inputGradCity: 'This field is required',
+                inputPhone:{
+                    minlength: 'Invalid phone number',
+                    maxlength: 'Invalid phone number',
+                },
                 inputPassword: {
                     minlength: 'Password must be at least 8 characters long'
                 }
@@ -79,7 +88,7 @@
     //     $(".unique-value").trigger('change');
     // }
 
-    // function to add master div in add employee form
+    // function to add master education div in add employee form
     function addMore(obj) {
         $("#masters").show();
         $("#addmore").hide();
@@ -91,7 +100,7 @@
     //     $(obj).parent().parent().remove()
     // }
 
-    // function to remove master div in add employee form
+    // function to remove master education div in add employee form
     function remove() {
         $("#masters").hide();
         $("#addmore").show();
@@ -253,7 +262,7 @@
 
     window.onload = stopedit();
 
-    function editprofile() {
+    function editprofilebyadmin() {
         $('.edit input,.edit select').prop('disabled', false);
         $('.edit button').show();
         $('#editbutton').hide();
@@ -262,4 +271,118 @@
     function canceledit(){
         window.location.reload()
     }
+
+    
+    // -------------------------------------user blades funtions------------------------------------------
+    // function to change break button
+    $(document).ready(function() {
+        $.ajax({
+            url: '{{route("change-break-button")}}',
+            method: "GET",
+            success: function(response) {
+                if (response.status == '500') {
+                    $("#startbreak").show();
+                    $("#endbreak").hide();
+                } else if (response.status == '200') {
+                    $("#startbreak").hide();
+                    $("#endbreak").show();
+                }
+            }
+        });
+    });
+
+    // function to take break
+    function takebreak() {
+        $("#startbreak").hide();
+        $("#endbreak").show();
+        $.ajax({
+            type: "GET",
+            url: "{{action('UserController@takeabreak')}}",
+        });
+    }
+
+    // function to end break
+    function endbreak() {
+        $("#startbreak").show();
+        $("#endbreak").hide();
+        $.ajax({
+            type: "GET",
+            url: "{{action('UserController@endbreak')}}",
+        });
+    }
+
+    // function to chnge lunch button
+    $(document).ready(function() {
+        $.ajax({
+            url: '{{route("change-lunch-button")}}',
+            method: "GET",
+            success: function(response) {
+                if (response.status == '500') {
+                    $("#startlunch").show();
+                    $("#endbreak").hide();
+                } else if (response.status == '200') {
+                    $("#startlunch").hide();
+                    $("#endlunch").show();
+                }
+            }
+        });
+    });
+
+    // function to start lunch
+    function startlunch() {
+        $("#startlunch").hide();
+        $("#endlunch").show();
+        $.ajax({
+            type: "GET",
+            url: "{{action('UserController@startlunch')}}",
+        });
+    }
+
+    // funtion to end lunch
+    function endlunch() {
+        $("#startlunch").show();
+        $("#endlunch").hide();
+        $.ajax({
+            type: "GET",
+            url: "{{action('UserController@endlunch')}}",
+        });
+    }
+
+    $(document).ready(function() {
+        $('.empedit input,.empedit select').prop('disabled', true);
+        $('.empedit button').hide();
+    });
+
+    function editprofile() {
+        $('.activate').prop('disabled', false);
+        $('input[name="_token"]').prop('disabled', false);
+        $('.empedit button').show();
+        $('#editprofilebutton').hide();
+    }
+
+    $(document).ready(function() {
+        $('#empform').validate({
+            rules: {
+                inputFname: 'required',
+                inputLname: 'required',
+                inputPhone:{
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10,
+                },
+            },
+            messages: {
+                inputFname: 'This field is required',
+                inputLname: 'This field is required',
+                inputPhone:{
+                    minlength: 'Invalid phone number',
+                    maxlength: 'Invalid phone number',
+                },
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+
 </script>

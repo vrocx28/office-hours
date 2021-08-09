@@ -4,9 +4,13 @@
 @section('content')
 <div class="outer-sec">
     <div class="container mt-5">
-    <a href="{{route('admin')}}" class="btn btn-primary">&#8592; Back</a>
-    <a href="{{('add-employee')}}" class="btn btn-primary">Add new Employee</a>
         <div class="row">
+            <div class="col-lg-6 col-md-6" style="text-align: left"> 
+                <a href="{{route('admin')}}" class="btn btn-primary">&#8592; Back</a>
+            </div>
+            <div class="col-lg-6 col-md-6" style="text-align: right"> 
+                <a href="{{('add-employee')}}" class="btn btn-primary">Add new Employee</a>
+            </div>
             @foreach ($emp_data as $employee)
                 <div class="col-lg-3 col-md-3">
                     <div class="card">

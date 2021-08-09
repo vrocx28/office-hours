@@ -43,8 +43,10 @@ Route::group(['prefix'=>'/', 'middleware' => 'emp'], function(){
     Route::get('/change-lunch-button','UserController@changeLunchButton')->name('change-lunch-button');
     Route::get('/start-lunch','UserController@startlunch')->name('start-lunch');
     Route::get('/end-lunch','UserController@endlunch')->name('end-lunch');
+    Route::get('/profile','UserController@profile')->name('profile');
+    Route::post('/edit-employee-post','UserController@editemployeePost')->name('edit-employee-post');
     Route::get('/emplogout','UserController@empLogout')->name('emplogout');
 
 });
-
+Route::get('/sendemail','emailController@sendemail')->name('sendemail');
 Route::get('/populate-state-city-data','StateCityController@savestatecity')->name('populate-state-city-data');

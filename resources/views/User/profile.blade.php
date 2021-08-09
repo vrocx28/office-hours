@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-@extends('adminlayout')
+@extends('userlayout')
 @include('footer')
 @section('content')
 
 <div class="container mt-5">
    <div class="row">
-      <div class="col-lg-6 col-md-6" style="text-align: left">
-         <a href="{{route('all-employees')}}" class="btn btn-primary">&#8592; Back</a>
+      <div class="col-md-6" style="text-align: left">
+      <a href="{{route('dashboard')}}" class="btn btn-primary">&#8592; Back</a>
       </div>
-      <div class="col-lg-6 col-md-6" style="text-align: right">
-         <button type="button" class="btn btn-primary" id="editbutton" onclick="editprofilebyadmin();">Edit Details</button>
+      <div class="col-md-6" style="text-align: right">
+         <button type="button" class="btn btn-primary" id="editprofilebutton" onclick="editprofile();">Edit Details</button>
       </div>
    </div>
 </div>
 
-<div class="container mt-5 edit">
+<div class="container mt-5 empedit">
 
-   <form class="edit-forms" id="AddEmp" action="{{ route('employee-post') }}" autocomplete="off" enctype="multipart/form-data" method="post">
-      <div class="row g-3 dd" >
+   <form class="edit-forms" id="empform" action="{{ route('edit-employee-post') }}" autocomplete="off" enctype="multipart/form-data" method="post">
+      <div class="row g-2 dd">
          <div class="col-md-3">
             @if(!empty($emp_details->profile_pic))
             <img src="{{url('')}}/{{$emp_details->profile_pic}}" alt="..." style="width:180px">
@@ -26,29 +26,29 @@
             @endif
          </div>
          @csrf
-         <input type="hidden" name="record_id" value="{{$emp_details->id??''}}">
+         <input type="hidden" class="form-control activate" name="record_id" value="{{$emp_details->id??''}}">
          <div class="col-md-3">
             <label for="inputFname" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="inputFname" name="inputFname" value="{{$emp_details->first_name??''}}">
+            <input type="text" class="form-control activate" id="inputFname" name="inputFname" value="{{$emp_details->first_name??''}}">
          </div>
          <div class="col-md-3">
             <label for="inputLname" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="inputLname" name="inputLname" value="{{$emp_details->last_name??''}}">
+            <input type="text" class="form-control activate" id="inputLname" name="inputLname" value="{{$emp_details->last_name??''}}">
          </div>
          <div class="col-md-3">
             <label for="inputPhone" class="form-label">Phone No.</label>
-            <input type="tel" class="form-control" id="inputPhone" name="inputPhone"value="{{$emp_details->phone??''}}">
+            <input type="tel" class="form-control activate" name="inputPhone" value="{{$emp_details->phone??''}}">
          </div>
       </div>
-      <div class="row g-3">
+      <div class="row g-2">
          <div class="col-md-5">
             <label for="inputPerEmail" class="form-label">Personal Email</label>
-            <input type="email" class="form-control" name="inputPerEmail" onkeyup="checkperemail(this)" value="{{$emp_details->personal_email??''}}">
+            <input type="email" class="form-control" name="inputPerEmail" value="{{$emp_details->personal_email??''}}">
             <label id="error-msg" class="chkeml" style="color:red"></label>
          </div>
          <div class="col-md-5">
             <label for="inputComEmail" class="form-label">Company Email</label>
-            <input type="email" class="form-control" name="inputComEmail" onkeyup="checkemail(this)" value="{{$emp_details->email??''}}">
+            <input type="email" class="form-control" name="inputComEmail" value="{{$emp_details->email??''}}">
             <label id="error-msg" class="eml" style="color:red"></label>
          </div>
          <div class="col-md-2">
@@ -60,10 +60,14 @@
             </select>
          </div>
          <div class="col-md-4">
+            <label for="inputPassword" class="form-label">Password</label>
+            <input type="password " class="form-control activate" id="inputPassword" name="inputPassword">
+         </div>
+         <div class="col-md-2">
             <label for="inputDesignation" class="form-label">Designation</label>
             <input type="text" class="form-control" id="inputDesignation" name="inputDesignation" value="{{$emp_details->designation??''}}">
          </div>
-         <div class="col-md-4">
+         <div class="col-md-2">
             <label for="inputEmployeeID" class="form-label">Employee ID</label>
             <input type="text" class="form-control" id="inputEmployeeID" name="inputEmployeeID" value="{{$emp_details->employee_id??''}}">
          </div>
@@ -84,7 +88,7 @@
       </div>
 
       <!-- graduation details -->
-      <div class="row g-3">
+      <div class="row g-2">
          <div class="col-md-12">
             <h5>Graduation Details</h5>
          </div>
@@ -100,7 +104,7 @@
                <option value='BCA' {{($emp_details->grad_degree == 'BCA') ? 'selected' : ''}}>BCA</option>
             </select>
          </div>
-         <div class="col-md-1">
+         <div class="col-md-2">
             <label for="inputGradPassYear" class="form-label">Passing year</label>
             <select id="inputGradPassYear" name="inputGradPassYear" class="form-select passyear">
                <option value="">Select...</option>
@@ -129,13 +133,10 @@
                @endforeach
             </select>
          </div>
-         <div class="col-md-1" id="addmore" @if(!empty($emp_details->mas_college_name) && ($emp_details->mas_college_name != null)) style="display:none" @else @endif>
-            <button type="button" class="btn btn-primary add-mr" onclick="addMore()">Add More</button>
-         </div>
       </div>
 
       <!-- masters deatails -->
-      <div class="row g-3 masters" id="masters" @if(!empty($emp_details->mas_college_name) && ($emp_details->mas_college_name != null)) @else style="display:none" @endif >
+      <div class="row g-2 masters" id="masters" @if(!empty($emp_details->mas_college_name) && ($emp_details->mas_college_name != null)) @else style="display:none" @endif >
          <div class="col-md-12">
             <h5>Masters Details</h5>
          </div>
@@ -151,7 +152,7 @@
                <option value="MCA" {{($emp_details->mas_degree == 'MCA') ? 'selected' : ''}}>MCA</option>
             </select>
          </div>
-         <div class="col-md-1">
+         <div class="col-md-2">
             <label for="inputMasPassYear" class="form-label">Passing year</label>
             <select name="inputMasPassYear" class="form-select passyear">
                <option value="">Select...</option>
@@ -180,12 +181,9 @@
                @endforeach
             </select>
          </div>
-         <div class="col-md-1 ">
-            <button type="button" class="btn btn-primary add-mr" onclick="remove();">Remove</button>
-         </div>
       </div>
 
-      <div class="row g-3">
+      <div class="row g-2">
          <div class="col-md-12">
             <button type="submit" class="btn btn-primary add-btn">Save</button>
             <button type="button" class="btn btn-primary add-btn" onclick="canceledit()">cancel</button>
@@ -193,85 +191,4 @@
       </div>
    </form>
 </div>
-<!-- tabs for tables -->
-<div class="nav nav-tabs nav-fill container mt-5" id="nav-tab" role="tablist">
-   <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#Attendance" role="tab" aria-controls="nav-home" aria-selected="true">Attendance</a>
-   <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#Lunch" role="tab" aria-controls="nav-profile" aria-selected="false">Lunch</a>
-   <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#Breaks" role="tab" aria-controls="nav-contact" aria-selected="false">Breaks</a>
-</div>
-
-<div class="tab-content" id="nav-tabContent">
-   <div class="tab-pane fade show active" id="Attendance" role="tabpanel" aria-labelledby="nav-home-tab">
-      <div class="container">
-         <h2>Attendance</h2>
-         <table class="datatable table table-bordered table-striped table-responsive-stack" id="attendancetable">
-            <thead class="thead-dark">
-               <tr>
-                  <th>Date</th>
-                  <th>Login</th>
-                  <th>Logout</th>
-               </tr>
-            </thead>
-            <tbody>
-               @foreach ($signin as $timeshee)
-               <tr>
-                  <td>{{ $timeshee->login_date }}</td>
-                  <td>{{ $timeshee->login_time}} &nbsp; {{ $timeshee->login_hour}}</td>
-                  <td>{{ $timeshee->logout_time}} &nbsp; {{ $timeshee->logout_hour}}</td>
-               </tr>
-               @endforeach
-            </tbody>
-         </table>
-      </div>
-   </div>
-
-   <div class="tab-pane fade" id="Lunch" role="tabpanel" aria-labelledby="nav-profile-tab">
-      <div class="container">
-         <h2>Lunch</h2>
-         <table class="datatable table table-bordered table-striped table-responsive-stack" id="lunchtable">
-            <thead class="thead-dark">
-               <tr>
-                  <th>Date</th>
-                  <th>Lunch Start</th>
-                  <th>Lunch End</th>
-               </tr>
-            </thead>
-            <tbody>
-               @foreach ($lunch as $lunchs)
-               <tr>
-                  <td>{{ $lunchs->date }}</td>
-                  <td>{{ $lunchs->lunch_end}} &nbsp; {{ $lunchs->start_hour}}</td>
-                  <td>{{ $lunchs->lunch_end}} &nbsp; {{ $lunchs->end_hour}}</td>
-               </tr>
-               @endforeach
-            </tbody>
-         </table>
-      </div>
-   </div>
-
-   <div class="tab-pane fade" id="Breaks" role="tabpanel" aria-labelledby="nav-contact-tab">
-      <div class="container">
-         <h2>Breaks</h2>
-         <table class="datatable table table-bordered table-striped table-responsive-stack" id="breaktable">
-            <thead class="thead-dark">
-               <tr>
-                  <th>Date</th>
-                  <th>Break Start</th>
-                  <th>Break End</th>
-               </tr>
-            </thead>
-            <tbody>
-               @foreach ($breaks as $breaktime)
-               <tr>
-                  <td>{{ $breaktime->date }}</td>
-                  <td>{{ $breaktime->break_start}} {{ $breaktime->start_hour}}</td>
-                  <td>{{ $breaktime->break_end}} {{ $breaktime->end_hour}}</td>
-               </tr>
-               @endforeach
-            </tbody>
-         </table>
-      </div>
-   </div>
-</div>
-
 @endsection

@@ -45,9 +45,15 @@ body {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     padding-bottom: 1rem;
-    width: 900px;
+    width: 950px;
     margin: auto;
     background-color: rgba(0, 0, 0, .05);
+}
+
+.form-container h5,
+.add-btn,
+.edit-forms h5 {
+    margin: 15px 0 0;
 }
 
 .error {
@@ -61,7 +67,7 @@ body {
         } */
 
 .add-mr {
-    margin-top: 7px;
+    margin-top: 30px;
     padding: 5px 11px 7px 11px;
 }
 
@@ -90,6 +96,10 @@ body {
     height: 100%;
     width: 100%;
     object-fit: cover;
+}
+
+.outer-sec .col-lg-6 {
+    margin: 0 0 30px;
 }
 
 .switch {
@@ -152,4 +162,11 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+@media (min-width:768px) {
+    .dd {
+        align-items: flex-end;
+        margin-bottom: 15px;
+    }
 }

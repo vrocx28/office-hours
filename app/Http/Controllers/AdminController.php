@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use \App\Models\admins;
 use \App\Models\Employee;
 use \App\Models\States;
@@ -12,7 +14,6 @@ use \App\Models\Cities;
 use \App\Models\Timesheet;
 use \App\Models\Breaktime;
 use \App\Models\Lunch;
-use Illuminate\Support\Facades\Auth;
 use Session;
 use Hash;
 
@@ -27,7 +28,7 @@ class AdminController extends Controller
     protected $breaktime;
     protected $lunch;
 
-    public function __construct(admins $admins, Employee $employee, States $state, Cities $citie, Timesheet $timesheet, Breaktime $breaktime, Lunch $lunch) 
+    public function __construct(admins $admins, Employee $employee, States $state, Cities $citie, Timesheet $timesheet, Breaktime $breaktime, Lunch $lunch)
     {
         $this->admins = $admins;
         $this->employee = $employee;
@@ -69,8 +70,8 @@ class AdminController extends Controller
 
     public function addEmployee()
     {
-        $states= $this->state::get();
-        return view('Admin/addemployee',['states'=>$states]);
+        $states = $this->state::get();
+        return view('Admin/addemployee', ['states' => $states]);
     }
 
     public function verifyperemail(Request $request)
@@ -79,7 +80,7 @@ class AdminController extends Controller
         $per_email = $this->employee::where('personal_email', $input['peremail'])->count();
         if ($per_email > 0) {
             return $response = ['status' => '500',];
-        }else{
+        } else {
             return $response = ['status' => '200',];
         }
     }
@@ -90,7 +91,7 @@ class AdminController extends Controller
         $email = $this->employee::where('email', $input['email'])->count();
         if ($email > 0) {
             return $response = ['status' => '500',];
-        }else{
+        } else {
             return $response = ['status' => '200',];
         }
     }
@@ -98,11 +99,11 @@ class AdminController extends Controller
     public function getCityList(Request $request)
     {
         $input = $request->all();
-        if(isset($input['state_id']) && $input['state_id'] > 0){
+        if (isset($input['state_id']) && $input['state_id'] > 0) {
             $all_cities = $this->citie::where('state_id', $input['state_id'])->get();
             $html = '<option value="">Select</option>';
-            foreach($all_cities as $city){
-                $html = $html.'<option value="'.$city->id.'">'.$city->city.'</option>';
+            foreach ($all_cities as $city) {
+                $html = $html . '<option value="' . $city->id . '">' . $city->city . '</option>';
             }
             return $response = [
                 'cities_list' => $html,
@@ -114,11 +115,11 @@ class AdminController extends Controller
     {
         $input = $request->all();
         DB::beginTransaction();
-        try 
-        {
+        try {
             $data = [
                 'first_name'        => $input['inputFname'] ?? null,
                 'last_name'         => $input['inputLname'] ?? null,
+                'phone'             => $input['inputPhone'] ?? null,
                 'personal_email'    => $input['inputPerEmail'] ?? null,
                 'email'             => $input['inputComEmail'] ?? null,
                 'designation'       => $input['inputDesignation'] ?? null,
@@ -140,23 +141,32 @@ class AdminController extends Controller
                 'mas_city'          => $input['inputMasCity'] ?? null,
             ];
 
-            if(isset($input['record_id']) && !empty($input['record_id'])){
-            }else{
-                $data['password'] = bcrypt($input['inputPassword'])??null;
+            if (isset($input['record_id']) && !empty($input['record_id'])) {
+            } else {
+                $data['password'] = bcrypt($input['inputPassword']) ?? null;
             }
-            if($request->hasfile('inputProfilepic')) {
+            if ($request->hasfile('inputProfilepic')) {
                 $file = $request->file('inputProfilepic');
                 $filename = ((string)(microtime(true) * 10000)) . "-" . $file->getClientOriginalName();
                 $file->move('images/', $filename);
                 $secondary_file = 'images/' . $filename;
                 $data['profile_pic'] = $secondary_file;
             }
-            if(isset($input['record_id']) && !empty($input['record_id'])){
+            if (isset($input['record_id']) && !empty($input['record_id'])) {
                 $update = $this->employee::where('id', $input['record_id'])->update($data);
-            }else{
+            } else {
                 $save =  $this->employee::create($data);
             }
             DB::commit();
+            if ($input['inputStatus']=='1'){
+                $to_email = "vaibhavbansal28@gmail.com";
+                $to_name = $input['inputFname'];
+                $body_text = "Hi ".$to_name."\nUse these credentials to loging the attendnce app."."\nEmail: ".$input['inputComEmail']."\npassword: ".$input['inputPassword'];
+                Mail::raw($body_text, function ($m) use ($to_email,$to_name) {
+                    $m->from('vaibhdev28@gmail.com', 'Dev Lord');
+                    $m->to($to_email, $to_name)->subject('Credentials for Attendance');
+                });
+            }
             return redirect()->back()->with("Employees Added Successfully");
         } catch (Exception $e) {
             // Rollback Transaction
@@ -166,31 +176,30 @@ class AdminController extends Controller
     }
     public function viewAllEmployees()
     {
-        $emp_data= $this->employee::get();
-        return view('Admin/allemployees',['emp_data'=>$emp_data]); 
+        $emp_data = $this->employee::get();
+        return view('Admin/allemployees', ['emp_data' => $emp_data]);
     }
 
     public function viewEmployeeDetails($id)
     {
-        $emp_details = $this->employee->where('id',$id)->first();
-        $breaks = $this->breaktime->where('emp_id',$id)->get();
-        $lunch = $this->lunch->where('emp_id',$id)->get();
-        $signin = $this->timesheet->where('emp_id',$id)->get();
+        $emp_details = $this->employee->where('id', $id)->first();
+        $breaks = $this->breaktime->where('emp_id', $id)->get();
+        $lunch = $this->lunch->where('emp_id', $id)->get();
+        $signin = $this->timesheet->where('emp_id', $id)->get();
         $states = $this->state::get();
         $gcity = $emp_details->grad_state;
         $mcity = $emp_details->mas_state;
-        $gradcity = $this->citie->where('state_id',$gcity)->get();
-        $mascity = $this->citie->where('state_id',$mcity)->get();
+        $gradcity = $this->citie->where('state_id', $gcity)->get();
+        $mascity = $this->citie->where('state_id', $mcity)->get();
         // dd($gradcity);
-        return view('Admin/viewemployeedetails',['lunch'=>$lunch,'breaks'=>$breaks,'signin'=>$signin, 'emp_details'=>$emp_details,'states'=>$states, 'gradcity'=>$gradcity, 'mascity'=>$mascity]);
+        return view('Admin/viewemployeedetails', ['lunch' => $lunch, 'breaks' => $breaks, 'signin' => $signin, 'emp_details' => $emp_details, 'states' => $states, 'gradcity' => $gradcity, 'mascity' => $mascity]);
     }
 
     public function logout()
     {
-        Session::flush();
-        Auth::logout();
+        // Session::flush();
+        Auth::guard('admin')->logout();
 
         return Redirect('adminlogin');
     }
-
 }
