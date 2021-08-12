@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 @extends('adminlayout')
 @section('content')
-<div class="container mt-5">
+<div class="container mt-3">
     <form class="form-container" action="{{ route('employee-post') }}" id="AddEmp" autocomplete="off" enctype="multipart/form-data" method="post">
         <div class="row g-3">
             <h2>Add Employee</h2>
+            <span class="required">* Required</span>
             @csrf
             <div class="col-md-6">
-                <label for="inputFname" class="form-label">First Name</label>
+                <label for="inputFname" class="form-label">First Name<span class="required">*</span></label>
                 <input type="text" class="form-control" id="inputFname" name="inputFname">
             </div>
             <div class="col-md-6">
-                <label for="inputLname" class="form-label">Last Name</label>
+                <label for="inputLname" class="form-label">Last Name<span class="required">*</span></label>
                 <input type="text" class="form-control" id="inputLname" name="inputLname">
             </div>
             <div class="col-8">
-                <label for="inputPerEmail" class="form-label">Personal Email</label>
+                <label for="inputPerEmail" class="form-label">Personal Email<span class="required">*</span></label>
                 <input type="email" class="form-control" name="inputPerEmail" onkeyup="checkperemail(this)">
                 <label id="error-msg" class="chkeml" style="color:red"></label>
             </div>
             <div class="col-4">
-                <label for="inputPhone" class="form-label">Phone No.</label>
+                <label for="inputPhone" class="form-label">Phone No.<span class="required">*</span></label>
                 <input type="tel" class="form-control" id="inputPhone" name="inputPhone">
             </div>
             <div class="col-12">
-                <label for="inputComEmail" class="form-label">Company Email</label>
+                <label for="inputComEmail" class="form-label">Company Email<span class="required">*</span></label>
                 <input type="email" class="form-control" name="inputComEmail" onkeyup="checkemail(this)">
                 <label id="error-msg" class="eml" style="color:red"></label>
             </div>
             <div class="col-md-6">
-                <label for="inputPassword" class="form-label">Password</label>
+                <label for="inputPassword" class="form-label">Password<span class="required">*</span></label>
                 <input type="password" class="form-control" id="inputPassword" name="inputPassword" value="">
             </div>
             <div class="col-md-3">
@@ -37,7 +38,7 @@
                 <button type="button" class="btn btn-primary" onclick="randompass();">Generate</button>
             </div>
             <div class="col-md-3">
-                <label for="inputStatus" class="form-label">Status</label>
+                <label for="inputStatus" class="form-label">Status<span class="required">*</span></label>
                 <select id="inputStatus" name="inputStatus" class="form-select">
                     <option selected value="">Choose...</option>
                     <option value="1">Active</option>
@@ -49,19 +50,20 @@
                     <input type="password" class="form-control" id="inputConfPassword" name="inputConfPassword">
                 </div> -->
             <div class="col-md-6">
-                <label for="inputDesignation" class="form-label">Designation</label>
+                <label for="inputDesignation" class="form-label">Designation<span class="required">*</span></label>
                 <input type="text" class="form-control" id="inputDesignation" name="inputDesignation">
             </div>
             <div class="col-md-6">
-                <label for="inputEmployeeID" class="form-label">Employee ID</label>
-                <input type="text" class="form-control" id="inputEmployeeID" name="inputEmployeeID">
+                <label for="inputEmployeeID" class="form-label">Employee ID<span class="required">*</span></label>
+                <input type="text" class="form-control" id="inputEmployeeID" name="inputEmployeeID" onkeyup="checkempid(this)">
+                <label id="error-msg" class="empid" style="color:red"></label>
             </div>
             <div class="col-md-6">
                 <label for="inputProfilepic" class="form-label">Upload pic</label>
                 <input type="file" class="form-control" id="inputProfilepic" name="inputProfilepic" accept="image/*">
             </div>
             <div class="col-md-3">
-                <label for="inputDepartment" class="form-label">Department</label>
+                <label for="inputDepartment" class="form-label">Department<span class="required">*</span></label>
                 <select id="inputDepartment" name="inputDepartment" class="form-select">
                     <option selected value="">Choose...</option>
                     <option value='Design'>Design</option>
@@ -71,7 +73,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label for="inputEmployeeID" class="form-label">Joining Date</label>
+                <label for="inputEmployeeID" class="form-label">Joining Date<span class="required">*</span></label>
                 <input type="date" class="form-control" id="inputJDate" name="inputJDate">
             </div>
         </div>
@@ -90,11 +92,11 @@
                 </select>
             </div> -->
             <div class="col-md-6">
-                <label for="inputGradCollege" class="form-label">College Name</label>
+                <label for="inputGradCollege" class="form-label">College Name<span class="required">*</span></label>
                 <input type="text" class="form-control" id="inputGradCollege" name="inputGradCollege">
             </div>
             <div class="col-md-4">
-                <label for="inputGDegreeName" class="form-label">Select Degree</label>
+                <label for="inputGDegreeName" class="form-label">Select Degree<span class="required">*</span></label>
                 <select id="inputGradDegree" name="inputGradDegree" class="form-select">
                     <option selected value="">Choose...</option>
                     <option value="B.tech">B.tech</option>
@@ -102,7 +104,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <label for="inputGradPassYear" class="form-label">Passing year</label>
+                <label for="inputGradPassYear" class="form-label">Passing year<span class="required">*</span></label>
                 <select id="inputGradPassYear" name="inputGradPassYear" class="form-select passyear">
                     <option value="">Select...</option>
                     {{ $year = date('Y') }}
@@ -111,7 +113,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label for="inputGradState" class="form-label">State</label>
+                <label for="inputGradState" class="form-label">State<span class="required">*</span></label>
                 <select id="inputGradState" name="inputGradState" class="form-select" data-live-search="true" onchange="getCityLIstFromStateId(this)">
                     <option value="">Select</option>
                     @if(!empty($states) && count($states) > 0)
@@ -122,7 +124,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label for="inputGradCity" class="form-label">City</label>
+                <label for="inputGradCity" class="form-label">City<span class="required">*</span></label>
                 <select id="inputGradCity" name="inputGradCity" class="form-select city" data-live-search="true">
                     <option value="">Select</option>
                 </select>

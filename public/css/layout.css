@@ -61,6 +61,10 @@ body {
     margin-left: 5px;
 }
 
+.required {
+    color: red;
+}
+
 
 /* label.error {
         display: inline;
@@ -72,14 +76,13 @@ body {
 }
 
 .outer-sec .card {
-    width: 18rem;
+    width: 20rem;
     height: 100%;
     padding-top: .5rem;
     padding-left: .5rem;
     padding-right: .5rem;
     background-color: rgba(0, 0, 0, 0.05);
     box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
-    margin: auto;
 }
 
 .outer-sec .card h5 {

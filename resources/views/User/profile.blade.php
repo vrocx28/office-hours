@@ -3,7 +3,7 @@
 @include('footer')
 @section('content')
 
-<div class="container mt-5">
+<div class="container mt-3">
    <div class="row">
       <div class="col-md-6" style="text-align: left">
       <a href="{{route('dashboard')}}" class="btn btn-primary">&#8592; Back</a>
@@ -14,7 +14,7 @@
    </div>
 </div>
 
-<div class="container mt-5 empedit">
+<div class="container mt-3 empedit">
 
    <form class="edit-forms" id="empform" action="{{ route('edit-employee-post') }}" autocomplete="off" enctype="multipart/form-data" method="post">
       <div class="row g-2 dd">

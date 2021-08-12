@@ -3,7 +3,7 @@
 @include('footer')
 @section('content')
 
-<div class="container mt-5">
+<div class="container mt-3">
    <div class="row">
       <div class="col-md-6" style="text-align: right">
          <button type="button" id="startbreak" class="btn btn-primary" onclick="takebreak();">Take a Break</button>

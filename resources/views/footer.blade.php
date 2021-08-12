@@ -58,8 +58,8 @@
                 inputJDate: 'This field is required',
                 inputDepartment: 'This field is required',
                 inputStatus: 'This field is required',
-                inputPerEmail: 'Enter a valid email',
-                inputComEmail: 'Enter a valid email',
+                inputPerEmail: 'This field is required',
+                inputComEmail: 'This field is required',
                 inputGradCollege: 'This field is required',
                 inputGradDegree: 'This field is required',
                 inputGradPassYear: 'Select Year',
@@ -186,6 +186,31 @@
                         $(':input[type="submit"]').prop('disabled', true);
                     } else {
                         $('.eml').html('');
+                        $(':input[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+    }
+
+    function checkempid(obj) {
+        var empid = $(obj).val();
+        var token = '{{csrf_token()}}';
+        var data =
+            $.ajax({
+                url: '{{route("empid-post")}}',
+                method: "POST",
+                dataType: "json",
+                data: {
+                    empid: empid,
+                    '_token': token
+                },
+                cache: false,
+                success: function(response) {
+                    if (response.status == '500') {
+                        $('.empid').html('Employee Exist');
+                        $(':input[type="submit"]').prop('disabled', true);
+                    } else {
+                        $('.empid').html('');
                         $(':input[type="submit"]').prop('disabled', false);
                     }
                 }

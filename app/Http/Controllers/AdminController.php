@@ -96,6 +96,17 @@ class AdminController extends Controller
         }
     }
 
+    public function checkempid(Request $request)
+    {
+        $input = $request->all();
+        $empid = $this->employee::where('employee_id', $input['empid'])->count();
+        if ($empid > 0) {
+            return $response = ['status' => '500',];
+        } else {
+            return $response = ['status' => '200',];
+        }
+    }
+
     public function getCityList(Request $request)
     {
         $input = $request->all();
