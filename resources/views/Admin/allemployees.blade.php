@@ -29,7 +29,7 @@
                                     <p class="card-text"><b>Stauts:</b>@if($employee->status == '1') Active @else Inactive @endif </p>
                                     <a href="{{route('downloadExcel')}}/{{'xlsx'}}/{{$employee->id}}" class="btn btn-primary">Export</a>
                                     <label class="switch">
-                                        <input type="checkbox" checked>
+                                        <input data-id="{{$employee->id}}" class="toggle-class" type="checkbox" {{ $employee->status ? 'checked' : '' }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -42,7 +42,3 @@
     </div>
 </div>
 @endsection
-<!-- <label class="switch">
-  <input type="checkbox" checked>
-  <span class="slider round"></span>
-</label> -->

@@ -28,6 +28,7 @@ Route::group(['prefix'=>'/', 'middleware' => 'admin'], function(){
     Route::post('/empid-post','AdminController@checkempid')->name('empid-post');
     Route::get('/get-city-list', 'AdminController@getCityList')->name('get-city-list');
     Route::get('/all-employees','AdminController@viewAllEmployees')->name('all-employees');
+    Route::get('/change-status','AdminController@changeStatus')->name('change-status');
     Route::get('/view-employee-details/{id?}','AdminController@viewEmployeeDetails')->name('view-employee-details');
     Route::get('/logout','AdminController@logout')->name('logout');
     Route::get('/downloadExcel/{type?}/{id?}', 'Exportcontroller@downloadExcel')->name('downloadExcel');

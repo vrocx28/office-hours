@@ -185,10 +185,18 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
     public function viewAllEmployees()
     {
         $emp_data = $this->employee::get();
         return view('Admin/allemployees', ['emp_data' => $emp_data]);
+    }
+
+    public function changeStatus(Request $request)
+    {
+        $input = $request->all();
+        $update = $this->employee::where('id', $input['emp_id'])->update(['status' => $input['status']]);
+        return response()->json(['success'=>'Status change successfully.']);
     }
 
     public function viewEmployeeDetails($id)

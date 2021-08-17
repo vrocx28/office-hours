@@ -32,7 +32,7 @@
                 inputGradPassYear: 'required',
                 inputGradState: 'required',
                 inputGradCity: 'required',
-                inputPhone:{
+                inputPhone: {
                     required: true,
                     minlength: 10,
                     maxlength: 10,
@@ -65,7 +65,7 @@
                 inputGradPassYear: 'Select Year',
                 inputGradState: 'This field is required',
                 inputGradCity: 'This field is required',
-                inputPhone:{
+                inputPhone: {
                     minlength: 'Invalid phone number',
                     maxlength: 'Invalid phone number',
                 },
@@ -235,6 +235,26 @@
 
     //     });
     // });
+    // function to change status
+    $(function() {
+        $('.toggle-class').change(function() {
+            var status = $(this).prop('checked') == true ? 1 : 0;
+            var emp_id = $(this).data('id');
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: '{{route("change-status")}}',
+                data: {
+                    'status': status,
+                    'emp_id': emp_id
+                },
+                success: function(response) {
+                    console.log(response.success)
+                }
+            });
+        })
+    })
 
     // function to make tables flex
     $(document).ready(function() {
@@ -293,11 +313,11 @@
         $('#editbutton').hide();
     }
 
-    function canceledit(){
+    function canceledit() {
         window.location.reload()
     }
 
-    
+
     // -------------------------------------user blades funtions------------------------------------------
     // function to change break button
     $(document).ready(function() {
@@ -390,7 +410,7 @@
             rules: {
                 inputFname: 'required',
                 inputLname: 'required',
-                inputPhone:{
+                inputPhone: {
                     required: true,
                     minlength: 10,
                     maxlength: 10,
@@ -399,7 +419,7 @@
             messages: {
                 inputFname: 'This field is required',
                 inputLname: 'This field is required',
-                inputPhone:{
+                inputPhone: {
                     minlength: 'Invalid phone number',
                     maxlength: 'Invalid phone number',
                 },
@@ -409,5 +429,4 @@
             }
         });
     });
-
 </script>
